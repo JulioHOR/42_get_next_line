@@ -13,55 +13,103 @@
 #include "get_next_line.h"
 #include <unistd.h>
 #include <fcntl.h>
-
-typedef struct	s_line
-{
-	char	*content;
-	t_line	*next_line;
-}	t_line;
-
-char	*get_next_line(int fd)
-{
-	int		bytes_read;
-	char	*buffer[BUFFER_SIZE];
-
-	bytes_read = read(fd, buffer, BUFFER_SIZE);
-}
-
-
-#include <unistd.h>
 #include <stdio.h>
-void main_print_it_for_me(char *str)
+
+char	*prepare_str_for_return(char *buffer)
 {
-	int	new_line_found;
-	int	i;
+	int		i;
+	int		new_line_found;
+	char	*str_for_return;
+	char	*old_buffer_content;
 
 	new_line_found = 0;
-	int	i = -1;
-	while (str[i] != '\0')
+	i = -1;
+	while (buffer[++i])
 	{
-		if (str[i] == '\n')
+		if (buffer[i] == '\n')
 		{
 			new_line_found = 1;
 			break ;
 		}
 	}
-	write(1, &(str[i]), i);
+	if (new_line_found)
+	{
+		str_for_return = ft_substr(buffer, 0, i);
+		old_buffer_content = buffer;
+		buffer = ft_substr(buffer, (i + 1), BUFFER_SIZE);
+		free(old_buffer_content);
+		return (str_for_return);
+	}
+	return (buffer);
+}
+
+char	*get_next_line(int fd)
+{
+	int			bytes_read;
+	static char	*buffer;
+
+	if (!(buffer))
+	{
+		buffer = (char *) malloc(BUFFER_SIZE);
+		if (!(buffer))
+			return (NULL);
+	}
+	bytes_read = read(fd, buffer, BUFFER_SIZE);
+	if (bytes_read == -1)
+		return (NULL);
+	if (bytes_read == 0 && )
+	return (prepare_str_for_return(buffer));
+}
+
+void	main_print_it_for_me(char *str)
+{
+	int	new_line_found;
+	int	i;
+
+	new_line_found = 0;
+	i = -1;
+	if (!(str))
+	{
+		printf("Recebemos um ponteiro nulo, e portanto não pudemos " \
+			"escrever nada.");
+		return ;
+	}
+	printf("%s", str);
+}
+
+void	main_free_it_for_me(void **target_pointer)
+{
+	free(*target_pointer);
+	*target_pointer = NULL;
 }
 
 int	main(void)
 {
 	int		fd;
 	char	*result;
-	
+
 	printf("\n\n--- Iniciando ---\n\n");
 
 	fd = open("our text.txt", O_RDONLY);
-	result = get_next_line(fd);
-	
-	main_print_it_for_me(result);
-	free_it_for_me
-
+	if (!(fd))
+	{
+		printf("O arquivo não foi encontrado, então encerraremos por aqui.");
+		printf("\n\n--- Encerrando ---\n\n");
+		return (0);
+	}
+	while (1)
+	{
+		result = get_next_line(fd);
+		if (!(result))
+		{
+			printf("\n\n< Fim! Acabamos de ler o arquivo, ou "
+				"tivemos um erro. >");
+			printf("\n\n--- Encerrando ---\n\n");
+			return (0);
+		}
+		main_print_it_for_me(result);
+	}
+	main_free_it_for_me((void *)&result);
 	printf("\n\n--- Encerrando ---\n\n");
 	return (0);
 }

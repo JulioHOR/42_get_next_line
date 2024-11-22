@@ -14,9 +14,19 @@
 # define GET_NEXT_LINE_H
 
 #ifndef BUFFER_SIZE
-# define BUFFER_SIZE 16
+# define BUFFER_SIZE 427
 #endif
 
+#include <stdlib.h>
+
+typedef struct	s_line
+{
+	char			*content;
+	struct s_line	*next_line;
+}	t_line;
+
 char	*get_next_line(int fd);
+size_t	ft_strlen(const char *s);
+char	*ft_substr(char const *s, unsigned int start, size_t len);
 
 #endif
