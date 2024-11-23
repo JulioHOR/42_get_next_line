@@ -6,22 +6,15 @@
 /*   By: juhenriq <dev@juliohenrique.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 21:10:00 by juhenriq          #+#    #+#             */
-/*   Updated: 2024/11/22 21:11:06 by juhenriq         ###   ########.fr       */
+/*   Updated: 2024/11/23 19:02:01 by juhenriq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <unistd.h>
-#include <fcntl.h>
 #include <stdio.h>
 
 void	main_print_it_for_me(char *str)
 {
-	int	new_line_found;
-	int	i;
-
-	new_line_found = 0;
-	i = -1;
 	if (!(str))
 	{
 		printf("Recebemos um ponteiro nulo, e portanto não pudemos " \
@@ -29,6 +22,7 @@ void	main_print_it_for_me(char *str)
 		return ;
 	}
 	printf("%s", str);
+	fflush(stdout);
 }
 
 void	main_free_it_for_me(void **target_pointer)
@@ -56,7 +50,7 @@ int	main(void)
 		result = get_next_line(fd);
 		if (!(result))
 		{
-			printf("\n\n< Fim! Acabamos de ler o arquivo, ou "
+			printf("< Fim! Acabamos de ler o arquivo, ou "
 				"tivemos um erro. >");
 			printf("\n\n--- Encerrando ---\n\n");
 			return (0);
