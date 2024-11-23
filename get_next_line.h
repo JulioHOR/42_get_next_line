@@ -19,14 +19,24 @@
 
 #include <stdlib.h>
 
-typedef struct	s_line
+typedef struct	s_fd
 {
+	int				fd_number;
+	char			*buffer;
 	char			*content;
-	struct s_line	*next_line;
-}	t_line;
+}	t_fd;
 
-char	*get_next_line(int fd);
+typedef struct	s_fds
+{
+	struct s_fd		*fds;
+	unsigned int	curr_len;
+	unsigned int	curr_max_len;
+}	t_fds;
+
 size_t	ft_strlen(const char *s);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
+size_t	ft_strlcpy(char *dst, const char *src, size_t size);
+size_t	ft_strlcat(char *dst, const char *src, size_t size);
+char	*ft_strjoin(char const *s1, char const *s2);
 
 #endif

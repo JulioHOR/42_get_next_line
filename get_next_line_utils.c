@@ -22,6 +22,65 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
+size_t	ft_strlcpy(char *dst, const char *src, size_t size)
+{
+	size_t	i;
+	size_t	arr_len;
+
+	arr_len = 0;
+	while (src[arr_len] != '\0')
+		arr_len++;
+	if (size <= 0)
+		return (arr_len);
+	i = 0;
+	while (src[i] != '\0' && (i < (size - 1)))
+	{
+		dst[i] = src[i];
+		i++;
+	}
+	dst[i] = '\0';
+	return (arr_len);
+}
+
+size_t	ft_strlcat(char *dst, const char *src, size_t size)
+{
+	size_t	i;
+	size_t	j;
+	size_t	src_size;
+	size_t	dst_size;
+	size_t	actual_amount_of_bytes_to_cpy;
+
+	src_size = ft_strlen(src);
+	dst_size = ft_strlen(dst);
+	if (size <= dst_size)
+		return (src_size + size);
+	actual_amount_of_bytes_to_cpy = (size - dst_size - 1);
+	i = dst_size;
+	j = 0;
+	while ((j < actual_amount_of_bytes_to_cpy) && (src[j] != '\0'))
+		dst[i++] = src[j++];
+	dst[i] = '\0';
+	return (src_size + dst_size);
+}
+
+char	*ft_strjoin(char const *s1, char const *s2)
+{
+	int		s1_len;
+	int		s2_len;
+	int		combined_len;
+	char	*new_string;
+
+	s1_len = ft_strlen(s1);
+	s2_len = ft_strlen(s2);
+	combined_len = (s1_len + s2_len) + 1;
+	new_string = (char *) malloc(combined_len);
+	if (!(new_string))
+		return ((void *) 0);
+	ft_strlcpy(new_string, s1, s1_len + 1);
+	ft_strlcat(new_string, s2, combined_len);
+	return (new_string);
+}
+
 char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
 	char	*new_substring;
