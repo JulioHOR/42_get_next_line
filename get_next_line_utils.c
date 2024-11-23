@@ -6,7 +6,7 @@
 /*   By: juhenriq <dev@juliohenrique.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 21:25:38 by juhenriq          #+#    #+#             */
-/*   Updated: 2024/11/14 20:09:24 by juhenriq         ###   ########.fr       */
+/*   Updated: 2024/11/23 03:08:59 by juhenriq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,4 +102,23 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 		new_substring[i++] = s[start++];
 	new_substring[i] = '\0';
 	return (new_substring);
+}
+
+char	*ft_strdup(const char *s)
+{
+	int		i;
+	int		string_len;
+	char	*malloc_return;
+
+	string_len = ft_strlen(s);
+	malloc_return = (char *) malloc(string_len + 1);
+	if (!malloc_return)
+		return (NULL);
+	i = 0;
+	while (i < (string_len + 1))
+	{
+		malloc_return[i] = s[i];
+		i++;
+	}
+	return (malloc_return);
 }
