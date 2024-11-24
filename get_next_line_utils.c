@@ -6,7 +6,7 @@
 /*   By: juhenriq <dev@juliohenrique.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 21:25:38 by juhenriq          #+#    #+#             */
-/*   Updated: 2024/11/23 19:08:16 by juhenriq         ###   ########.fr       */
+/*   Updated: 2024/11/24 01:28:07 by juhenriq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,13 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 
 	s_len = ft_strlen(s);
 	if (start >= s_len)
-		return ((char *) malloc(1));
+	{
+		new_substring = (char *) malloc(1);
+		if (!(new_substring))
+			return (NULL);
+		new_substring[0] = '\0';
+		return (new_substring);
+	}
 	real_substring_len = len;
 	if (len > (s_len - start))
 		real_substring_len = s_len - start;

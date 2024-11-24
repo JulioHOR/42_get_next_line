@@ -6,12 +6,40 @@
 /*   By: juhenriq <dev@juliohenrique.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 21:24:16 by juhenriq          #+#    #+#             */
-/*   Updated: 2024/11/23 20:45:46 by juhenriq         ###   ########.fr       */
+/*   Updated: 2024/11/24 01:31:24 by juhenriq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <stdio.h> // REMOVA DEPOIS JESUS
+
+void	*ft_memset(void *s, int c, size_t n)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < n)
+	{
+		((unsigned char *) s)[i] = (unsigned char) c;
+		i++;
+	}
+	return (s);
+}
+
+void	*ft_calloc(size_t nmemb, size_t size)
+{
+	void	*mem_addr;
+
+	if ((nmemb == 0) && (size == 0))
+		return (malloc(0));
+	if (((nmemb != 0) && (size > (((-1) * size) / nmemb))))
+		return ((void *) 0);
+	mem_addr = malloc(size * nmemb);
+	if (!(mem_addr))
+		return ((void *) 0);
+	ft_memset(mem_addr, '\0', (size * nmemb));
+	return (mem_addr);
+}
 
 int	debug_is_not_null_terminated(char *str)
 {
@@ -24,12 +52,10 @@ int	debug_is_not_null_terminated(char *str)
 	return (1);
 }
 
-int	new_line_index(char *content)
+int	get_new_line_index(char *content)
 {
 	int	i;
-	int	new_line_counter;
 
-	new_line_counter = 0;
 	i = -1;
 	while (content[++i])
 		if (content[i] == '\n')
@@ -64,67 +90,46 @@ char	*prepare_str_for_return(t_fd *fd_ptr)
 	char	*str_to_return;
 	char	*temp_char_ptr;
 	int		bytes_read;
-	int		i;
-	char	*just_to_check;
+	int		new_line_index;
 
 	while (1)
 	{
-		// if buffer points to NULL, then we should return NULL
-		if (fd_ptr->buffer == NULL)
-			return (NULL);
 		bytes_read = read(fd_ptr->fd_nbr, fd_ptr->buffer, BUFFER_SIZE);
-		if ((fd_ptr->content == NULL) && (bytes_read == 0))
+		if (((bytes_read == 0) && (ft_strlen(fd_ptr->content) == 0)) \
+			|| (bytes_read < 0))
 			return (NULL);
-		// if (*(fd_ptr->content) == -66)
-		// 	printf("bug vai ocorrer");
-		if (bytes_read >= 0)
+		fd_ptr->buffer[bytes_read] = '\0';
+		if (!(fd_ptr->content))
 		{
-			if (bytes_read != BUFFER_SIZE)
-				fd_ptr->buffer[bytes_read] = '\0';
-			fd_ptr->buffer[bytes_read] = '\0';
-			if (fd_ptr->content)
+			fd_ptr->content = ft_strdup("");
+			if (!(fd_ptr->content))
+				return (NULL);
+		}
+		fd_ptr->content = ft_strjoin(fd_ptr->content, fd_ptr->buffer);
+		if (!(fd_ptr->content))
+			return(NULL);
+		new_line_index = get_new_line_index(fd_ptr->content);
+		if (new_line_index != -1)
+		{
+			str_to_return = ft_substr(fd_ptr->content, 0, new_line_index + 1);
+			if (!(str_to_return))
+				return (NULL);
+			if (ft_strlen(fd_ptr->content) >= (size_t) (new_line_index + 1))
 			{
 				temp_char_ptr = fd_ptr->content;
-				if (bytes_read == 0)
-				{
-					str_to_return = ft_strdup(fd_ptr->content);
-					resets_fd(fd_ptr, 0);
-					return (str_to_return);
-				}
-				just_to_check = ft_substr(fd_ptr->buffer, 0, bytes_read);
-				fd_ptr->content = ft_strjoin(fd_ptr->content, ft_substr(fd_ptr->buffer, 0, bytes_read));
+				fd_ptr->content = ft_substr(fd_ptr->content, new_line_index + 1, ft_strlen(fd_ptr->content));
 				if (!(fd_ptr->content))
 					return (NULL);
 				free(temp_char_ptr);
-				temp_char_ptr = NULL;
 			}
-			else
-				fd_ptr->content = ft_strdup(fd_ptr->buffer);
+			return(str_to_return);
 		}
-		i = new_line_index(fd_ptr->content);
-		if (i != -1)
+		if (!(ft_strlen(fd_ptr->buffer)) && ft_strlen(fd_ptr->content) > 0)
 		{
-			str_to_return = ft_substr(fd_ptr->content, 0, (i + 1));
-			temp_char_ptr = fd_ptr->content;
-			// se strlen = i, só limpe fd_ptr->content era bug aqui de acesso
-			// ou seja, o final de content é uma nova linha.
-			// if (ft_strlen(fd_ptr->content) == i + 1)
-			// 	resets_fd(fd_ptr, 2);
-			// else
-			// {
-			// 	fd_ptr->content = ft_substr(fd_ptr->content, (i + 1), (ft_strlen(fd_ptr->content) - i));
-			// 	free(temp_char_ptr);
-			// 	temp_char_ptr = NULL;
-			// }
-			fd_ptr->content = ft_substr(fd_ptr->content, (i + 1), (ft_strlen(fd_ptr->content) - i));
-			free(temp_char_ptr);
-			temp_char_ptr = NULL;
-			// if there's a cathastrophical failure, free everything.
-			if (!(fd_ptr->content))
-			{
-				resets_fd(fd_ptr, 0);
+			str_to_return = ft_strdup(fd_ptr->content);
+			if (!(str_to_return))
 				return (NULL);
-			}
+			resets_fd(fd_ptr, 2);
 			return (str_to_return);
 		}
 	}
@@ -146,9 +151,10 @@ t_fd	*get_fd_pointer(int desired_fd, t_fd *i_node)
 	if (!(last_valid_node->next_node))
 			return (NULL);
 	i_node = last_valid_node->next_node;
-	i_node->buffer = (char *) malloc(BUFFER_SIZE);
+	i_node->buffer = (char *) malloc(BUFFER_SIZE + 1);
 	if (!(i_node->buffer))
 		return (NULL);
+	i_node->buffer[BUFFER_SIZE] = '\0';
 	i_node->fd_nbr = desired_fd;
 	i_node->content = NULL;
 	i_node->next_node = NULL;
