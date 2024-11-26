@@ -6,51 +6,12 @@
 /*   By: juhenriq <dev@juliohenrique.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 21:24:16 by juhenriq          #+#    #+#             */
-/*   Updated: 2024/11/24 01:31:24 by juhenriq         ###   ########.fr       */
+/*   Updated: 2024/11/26 04:22:51 by juhenriq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <stdio.h> // REMOVA DEPOIS JESUS
-
-void	*ft_memset(void *s, int c, size_t n)
-{
-	size_t	i;
-
-	i = 0;
-	while (i < n)
-	{
-		((unsigned char *) s)[i] = (unsigned char) c;
-		i++;
-	}
-	return (s);
-}
-
-void	*ft_calloc(size_t nmemb, size_t size)
-{
-	void	*mem_addr;
-
-	if ((nmemb == 0) && (size == 0))
-		return (malloc(0));
-	if (((nmemb != 0) && (size > (((-1) * size) / nmemb))))
-		return ((void *) 0);
-	mem_addr = malloc(size * nmemb);
-	if (!(mem_addr))
-		return ((void *) 0);
-	ft_memset(mem_addr, '\0', (size * nmemb));
-	return (mem_addr);
-}
-
-int	debug_is_not_null_terminated(char *str)
-{
-	int i;
-
-	i = -1;
-	while (str[i] < 50)
-		if (!(str[i]))
-			return (0);
-	return (1);
-}
 
 int	get_new_line_index(char *content)
 {
@@ -105,9 +66,11 @@ char	*prepare_str_for_return(t_fd *fd_ptr)
 			if (!(fd_ptr->content))
 				return (NULL);
 		}
+		temp_char_ptr = fd_ptr->content;
 		fd_ptr->content = ft_strjoin(fd_ptr->content, fd_ptr->buffer);
 		if (!(fd_ptr->content))
 			return(NULL);
+		free(temp_char_ptr);
 		new_line_index = get_new_line_index(fd_ptr->content);
 		if (new_line_index != -1)
 		{
