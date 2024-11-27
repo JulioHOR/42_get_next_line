@@ -6,7 +6,7 @@
 /*   By: juhenriq <dev@juliohenrique.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 21:24:16 by juhenriq          #+#    #+#             */
-/*   Updated: 2024/11/26 04:22:51 by juhenriq         ###   ########.fr       */
+/*   Updated: 2024/11/26 22:01:19 by juhenriq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,11 +124,24 @@ t_fd	*get_fd_pointer(int desired_fd, t_fd *i_node)
 	return (i_node);
 }
 
+void	test_function_free_every_node(t_fd **i_node)
+{
+	free((*i_node)->buffer);
+	free((*i_node)->content);
+	free(*i_node);
+	*i_node = NULL;
+}
+
 char	*get_next_line(int fd)
 {
 	static t_fd	*head_node;
 	t_fd		*fd_ptr;
+	char		*result;
+	// int			read_test;
 
+	// read_test = read(fd, NULL, 0);
+	// if (read_test == -1)
+	// 	return (NULL);
 	if (!(head_node))
 	{
 		head_node = (t_fd *) malloc(sizeof(t_fd));
@@ -145,5 +158,8 @@ char	*get_next_line(int fd)
 	fd_ptr = get_fd_pointer(fd, head_node);
 	if (!(fd_ptr))
 		return (NULL);
-	return (prepare_str_for_return(fd_ptr));
+	result = prepare_str_for_return(fd_ptr);
+	if (!(result))
+		test_function_free_every_node(&head_node);
+	return (result);
 }
