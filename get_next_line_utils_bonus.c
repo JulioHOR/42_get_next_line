@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*   get_next_line_utils_bonus.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: juhenriq <dev@juliohenrique.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 21:25:38 by juhenriq          #+#    #+#             */
-/*   Updated: 2024/11/27 18:47:52 by juhenriq         ###   ########.fr       */
+/*   Updated: 2024/11/27 19:38:06 by juhenriq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 		real_substring_len = s_len - start;
 	new_substring = (char *) malloc((real_substring_len + 1));
 	if (!new_substring)
-		return (((void *) 0));
+		return (NULL);
 	i = 0;
 	while ((i < real_substring_len) && (s[start] != '\0'))
 		new_substring[i++] = s[start++];
@@ -106,11 +106,8 @@ char	*ft_strdup(const char *s)
 	malloc_return = (char *) malloc(string_len + 1);
 	if (!malloc_return)
 		return (NULL);
-	i = 0;
-	while (i < (string_len + 1))
-	{
+	i = -1;
+	while (++i < (string_len + 1))
 		malloc_return[i] = s[i];
-		i++;
-	}
 	return (malloc_return);
 }
