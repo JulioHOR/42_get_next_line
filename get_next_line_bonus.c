@@ -6,7 +6,7 @@
 /*   By: juhenriq <dev@juliohenrique.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 21:24:16 by juhenriq          #+#    #+#             */
-/*   Updated: 2024/11/27 20:41:13 by juhenriq         ###   ########.fr       */
+/*   Updated: 2024/11/29 04:09:00 by juhenriq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,15 +80,15 @@ t_fd	*get_fd_pointer(int fd, t_fd *i_node)
 {
 	t_fd	*last_valid_node;
 
+	last_valid_node = NULL;
 	while (i_node)
 	{
 		if (i_node->fd_nbr == fd)
 			return (i_node);
-		if (i_node->next_node)
-		{
-			last_valid_node = i_node;
-			i_node = i_node->next_node;
-		}
+		last_valid_node = i_node;
+		if (!(i_node->next_node))
+			break ;
+		i_node = i_node->next_node;
 	}
 	i_node = (t_fd *) malloc(sizeof(t_fd));
 	if (!(i_node))
@@ -111,13 +111,6 @@ void	free_node(t_fd **head_node, t_fd **target_fd_ptr)
 	t_fd	*last_valid_node;
 
 	last_valid_node = NULL;
-	if (*head_node == NULL || *target_fd_ptr == NULL)
-		return ;
-	if (*head_node == *target_fd_ptr)
-	{
-		*head_node = (*head_node)->next_node;
-		return ;
-	}
 	i_node = *head_node;
 	while ((i_node) && (i_node != *target_fd_ptr) && (i_node->next_node))
 	{
@@ -128,6 +121,8 @@ void	free_node(t_fd **head_node, t_fd **target_fd_ptr)
 		return ;
 	if (last_valid_node)
 			last_valid_node->next_node = i_node->next_node;
+	if (*target_fd_ptr == *head_node)
+		*head_node = (*head_node)->next_node;
 	free(i_node->buffer);
 	free(i_node->content);
 	free(i_node);
@@ -142,6 +137,8 @@ char	*get_next_line(int fd)
 	char		*result;
 
 	fd_ptr = get_fd_pointer(fd, head_node);
+	if (!(head_node))
+		head_node = fd_ptr;
 	if (!(fd_ptr))
 		return (NULL);
 	result = prepare_str_for_return(fd_ptr);
