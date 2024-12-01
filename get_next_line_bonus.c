@@ -6,11 +6,11 @@
 /*   By: juhenriq <dev@juliohenrique.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 21:24:16 by juhenriq          #+#    #+#             */
-/*   Updated: 2024/11/29 04:09:00 by juhenriq         ###   ########.fr       */
+/*   Updated: 2024/11/30 21:17:19 by juhenriq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 int	get_new_line_index(char *content)
 {
@@ -45,9 +45,9 @@ char	*prepare_str_for_return(t_fd *fd_ptr)
 		}
 		temp_char_ptr = fd_ptr->content;
 		fd_ptr->content = ft_strjoin(fd_ptr->content, fd_ptr->buffer);
+		free(temp_char_ptr);
 		if (!(fd_ptr->content))
 			return(NULL);
-		free(temp_char_ptr);
 		new_line_index = get_new_line_index(fd_ptr->content);
 		if (new_line_index != -1)
 		{
@@ -58,19 +58,19 @@ char	*prepare_str_for_return(t_fd *fd_ptr)
 			{
 				temp_char_ptr = fd_ptr->content;
 				fd_ptr->content = ft_substr(fd_ptr->content, new_line_index + 1, ft_strlen(fd_ptr->content));
+				free(temp_char_ptr);
 				if (!(fd_ptr->content))
 					return (NULL);
-				free(temp_char_ptr);
 			}
 			return(str_to_return);
 		}
 		if (!(ft_strlen(fd_ptr->buffer)) && ft_strlen(fd_ptr->content) > 0)
 		{
 			str_to_return = ft_strdup(fd_ptr->content);
-			if (!(str_to_return))
-				return (NULL);
 			free(fd_ptr->content);
 			fd_ptr->content = NULL;
+			if (!(str_to_return))
+				return (NULL);
 			return (str_to_return);
 		}
 	}
@@ -95,7 +95,10 @@ t_fd	*get_fd_pointer(int fd, t_fd *i_node)
 		return (NULL);
 	i_node->buffer = (char *) malloc(BUFFER_SIZE + 1);
 	if (!(i_node->buffer))
+	{
+		free(i_node);
 		return (NULL);
+	}
 	i_node->buffer[0] = '\0';
 	i_node->fd_nbr = fd;
 	i_node->content = NULL;
@@ -112,6 +115,8 @@ void	free_node(t_fd **head_node, t_fd **target_fd_ptr)
 
 	last_valid_node = NULL;
 	i_node = *head_node;
+	if (!(i_node))
+		return ;
 	while ((i_node) && (i_node != *target_fd_ptr) && (i_node->next_node))
 	{
 		last_valid_node = i_node;
@@ -121,7 +126,7 @@ void	free_node(t_fd **head_node, t_fd **target_fd_ptr)
 		return ;
 	if (last_valid_node)
 			last_valid_node->next_node = i_node->next_node;
-	if (*target_fd_ptr == *head_node)
+	if ((*target_fd_ptr == *head_node) && (*head_node))
 		*head_node = (*head_node)->next_node;
 	free(i_node->buffer);
 	free(i_node->content);
@@ -136,6 +141,8 @@ char	*get_next_line(int fd)
 	t_fd		*fd_ptr;
 	char		*result;
 
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
 	fd_ptr = get_fd_pointer(fd, head_node);
 	if (!(head_node))
 		head_node = fd_ptr;

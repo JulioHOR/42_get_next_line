@@ -6,11 +6,11 @@
 /*   By: juhenriq <dev@juliohenrique.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 21:25:38 by juhenriq          #+#    #+#             */
-/*   Updated: 2024/11/27 19:38:06 by juhenriq         ###   ########.fr       */
+/*   Updated: 2024/11/30 20:40:04 by juhenriq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 size_t	ft_strlen(const char *s)
 {

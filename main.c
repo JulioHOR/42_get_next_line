@@ -6,11 +6,11 @@
 /*   By: juhenriq <dev@juliohenrique.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 21:10:00 by juhenriq          #+#    #+#             */
-/*   Updated: 2024/11/29 04:13:49 by juhenriq         ###   ########.fr       */
+/*   Updated: 2024/11/30 21:06:23 by juhenriq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 #include <stdio.h>
 
 void	main_print_it_for_me(char *str)
@@ -98,6 +98,44 @@ int	main(void)
 		main_free_it_for_me((void *)&result);
 	}
 
+	if (0)
+	{
+		printf("\n\n--- Teste de fd válido, mas que depois é fechado ---\n\n");
+		int	fd_test = open("text_files/empty.txt", O_RDONLY);
+		while (1)
+		{
+			result = get_next_line(fd_test);
+			close(fd_test);
+			if (!(result))
+			{
+				printf("< Fim! Ou acabamos de ler o arquivo, ou "
+					"tivemos um erro. >\n\n");
+				printf("\n\n--- Encerrando ---\n\n");
+				return (0);
+			}
+			main_print_it_for_me(result);
+			main_free_it_for_me((void *)&result);
+		}
+	}
+
+	if (1)
+	{
+		printf("\n\n--- Teste de fd com o empty.txt ---\n\n");
+		int	fd_test = open("text_files/only_nl.txt", O_RDONLY);
+		while (1)
+		{
+			result = get_next_line(fd_test);
+			if (!(result))
+			{
+				printf("< Fim! Ou acabamos de ler o arquivo, ou "
+					"tivemos um erro. >\n\n");
+				printf("\n\n--- Encerrando ---\n\n");
+				return (0);
+			}
+			main_print_it_for_me(result);
+			main_free_it_for_me((void *)&result);
+		}
+	}
 	// teste do gpt 1
 	if (0) // Altere para `if(0)` para desativar este bloco de testes
 	{
