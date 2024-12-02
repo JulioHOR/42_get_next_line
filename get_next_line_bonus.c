@@ -6,7 +6,7 @@
 /*   By: juhenriq <dev@juliohenrique.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 21:24:16 by juhenriq          #+#    #+#             */
-/*   Updated: 2024/11/30 21:17:19 by juhenriq         ###   ########.fr       */
+/*   Updated: 2024/12/02 01:19:13 by juhenriq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,10 @@ char	*prepare_str_for_return(t_fd *fd_ptr)
 				fd_ptr->content = ft_substr(fd_ptr->content, new_line_index + 1, ft_strlen(fd_ptr->content));
 				free(temp_char_ptr);
 				if (!(fd_ptr->content))
+				{
+					free(str_to_return);
 					return (NULL);
+				}
 			}
 			return(str_to_return);
 		}

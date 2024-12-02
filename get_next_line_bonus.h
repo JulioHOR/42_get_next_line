@@ -6,7 +6,7 @@
 /*   By: juhenriq <dev@juliohenrique.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 21:24:41 by juhenriq          #+#    #+#             */
-/*   Updated: 2024/11/30 20:34:22 by juhenriq         ###   ########.fr       */
+/*   Updated: 2024/12/01 15:02:58 by juhenriq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 #ifndef BUFFER_SIZE
 # define BUFFER_SIZE 8
 #endif
+
+// # define malloc(size) mock_malloc(size)
 
 #include <stdlib.h>
 #include <fcntl.h>

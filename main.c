@@ -6,12 +6,13 @@
 /*   By: juhenriq <dev@juliohenrique.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 21:10:00 by juhenriq          #+#    #+#             */
-/*   Updated: 2024/11/30 21:06:23 by juhenriq         ###   ########.fr       */
+/*   Updated: 2024/12/01 15:14:33 by juhenriq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 void	main_print_it_for_me(char *str)
 {
@@ -29,6 +30,25 @@ void	main_free_it_for_me(void **target_pointer)
 {
 	free(*target_pointer);
 	*target_pointer = NULL;
+}
+
+void	*mock_malloc(size_t size)
+{
+	static int	malloc_count = 1;
+	static int	malloc_target;
+
+	// write(1, "\nEntramos no mockmalloc!\n", 24);
+	malloc_target = 5;
+	if (malloc_count++ == malloc_target)
+	{
+		write(1, "\nEstamos forçando falha!\n\n", 25);
+		return (NULL);
+	}
+	#undef malloc
+	extern void *malloc(size_t);
+	void *result = malloc(size);
+	#define malloc(size) mock_malloc(size);
+	return (result);
 }
 
 int	main(void)
@@ -121,14 +141,14 @@ int	main(void)
 	if (1)
 	{
 		printf("\n\n--- Teste de fd com o empty.txt ---\n\n");
-		int	fd_test = open("text_files/only_nl.txt", O_RDONLY);
+		int	fd_test = open("text_files/giant_line.txt", O_RDONLY);
 		while (1)
 		{
 			result = get_next_line(fd_test);
 			if (!(result))
 			{
 				printf("< Fim! Ou acabamos de ler o arquivo, ou "
-					"tivemos um erro. >\n\n");
+					"tivemos um erro. >");
 				printf("\n\n--- Encerrando ---\n\n");
 				return (0);
 			}
