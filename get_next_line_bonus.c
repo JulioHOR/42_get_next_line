@@ -6,7 +6,7 @@
 /*   By: juhenriq <dev@juliohenrique.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 21:24:16 by juhenriq          #+#    #+#             */
-/*   Updated: 2024/12/02 03:58:22 by juhenriq         ###   ########.fr       */
+/*   Updated: 2024/12/02 04:09:26 by juhenriq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	free_all_fd_nodes(t_fd **fd_head)
 		i_node_buffer = i_node_fd->head_tbuffer;
 		while (i_node_buffer)
 		{
-			temp_ptr_buffer = i_node_buffer->next_buffer;
+			temp_ptr_buffer = i_node_buffer->next_tbuffer;
 			free(i_node_buffer->buffer);
 			i_node_buffer->buffer = NULL;
 			free(i_node_buffer);
@@ -130,10 +130,10 @@ char	*get_string(t_fd *fd_ptr)
 		}
 		fd_ptr->last_tbuffer->buffer[bytes_read] = '\0';
 		fd_ptr->entire_len += bytes_read;
-		fd_ptr->last_tbuffer->next_buffer = (char *) malloc(BUFFER_SIZE + 1);
-		if (!(fd_ptr->last_tbuffer->next_buffer))
+		fd_ptr->last_tbuffer->next_tbuffer = (char *) malloc(BUFFER_SIZE + 1);
+		if (!(fd_ptr->last_tbuffer->next_tbuffer))
 			return (NULL);
-		fd_ptr->last_tbuffer = fd_ptr->last_tbuffer->next_buffer;
+		fd_ptr->last_tbuffer = fd_ptr->last_tbuffer->next_tbuffer;
 		fd_ptr->last_tbuffer->buffer[0] = '\0';
 		i = -1;
 		while (latest_used_tbuffer->buffer[++i])

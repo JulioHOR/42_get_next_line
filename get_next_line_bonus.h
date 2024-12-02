@@ -6,7 +6,7 @@
 /*   By: juhenriq <dev@juliohenrique.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 21:24:41 by juhenriq          #+#    #+#             */
-/*   Updated: 2024/12/02 03:49:54 by juhenriq         ###   ########.fr       */
+/*   Updated: 2024/12/02 04:09:26 by juhenriq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 typedef struct s_buffer
 {
 	char			*buffer;
-	struct s_buffer	*next_buffer;
+	struct s_buffer	*next_tbuffer;
 }	t_buffer;
 
 typedef struct s_fd
