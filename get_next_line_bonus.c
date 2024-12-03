@@ -6,7 +6,7 @@
 /*   By: juhenriq <dev@juliohenrique.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 21:24:16 by juhenriq          #+#    #+#             */
-/*   Updated: 2024/12/02 04:09:26 by juhenriq         ###   ########.fr       */
+/*   Updated: 2024/12/03 12:47:30 by juhenriq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	free_all_fd_nodes(t_fd **fd_head)
 			i_node_buffer = temp_ptr_buffer;
 		}
 		temp_ptr_buffer = i_node_fd;
-		i_node_fd = i_node_fd->next_fd;
+		i_node_fd = i_node_fd->next_tfd;
 		free(temp_ptr_fd);
 	}
 }
@@ -50,7 +50,7 @@ char	*get_fd_ptr(int fd, t_fd **fd_head)
 		if (i_fd_node->fd_nbr == fd)
 			return (i_fd_node);
 		last_valid_node = i_fd_node;
-		i_fd_node = i_fd_node->next_fd;
+		i_fd_node = i_fd_node->next_tfd;
 	}
 	i_fd_node = (t_fd *) malloc(sizeof(t_fd));
 	if (!(i_fd_node))
@@ -72,11 +72,11 @@ char	*get_fd_ptr(int fd, t_fd **fd_head)
 	i_fd_node->last_tbuffer = i_fd_node->head_tbuffer;
 	i_fd_node->fd_nbr = fd;
 	i_fd_node->entire_len = 0;
-	i_fd_node->next_fd = NULL;
+	i_fd_node->next_tfd = NULL;
 	if (!(*fd_head))
 		*fd_head = i_fd_node;
 	if (last_valid_node)
-		last_valid_node->next_fd = i_fd_node;
+		last_valid_node->next_tfd = i_fd_node;
 }
 
 char	*concat_buffers(t_fd *fd_ptr)

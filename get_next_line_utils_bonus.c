@@ -6,7 +6,7 @@
 /*   By: juhenriq <dev@juliohenrique.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 21:25:38 by juhenriq          #+#    #+#             */
-/*   Updated: 2024/12/02 03:50:55 by juhenriq         ###   ########.fr       */
+/*   Updated: 2024/12/03 12:48:28 by juhenriq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,4 +21,5 @@ void	ft_memcpy(void *dest, const void *src)
 	i = 0;
 	while (((const char *)src)[i])
 		((unsigned char *) dest)[i++] = ((unsigned char *) src)[i];
+	((unsigned char *) dest)[i] = ((unsigned char *) src)[i];
 }

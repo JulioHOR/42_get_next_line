@@ -6,7 +6,7 @@
 /*   By: juhenriq <dev@juliohenrique.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 21:24:41 by juhenriq          #+#    #+#             */
-/*   Updated: 2024/12/02 04:09:26 by juhenriq         ###   ########.fr       */
+/*   Updated: 2024/12/03 12:47:30 by juhenriq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ typedef struct s_fd
 	unsigned long	entire_len;
 	t_buffer		*head_tbuffer;
 	t_buffer		*last_tbuffer;
-	struct s_fd		*next_fd;
+	struct s_fd		*next_tfd;
 }	t_fd;
 
 char	*get_next_line(int fd);
