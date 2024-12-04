@@ -6,7 +6,7 @@
 /*   By: juhenriq <dev@juliohenrique.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 21:10:00 by juhenriq          #+#    #+#             */
-/*   Updated: 2024/12/02 04:07:17 by juhenriq         ###   ########.fr       */
+/*   Updated: 2024/12/03 20:01:19 by juhenriq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 
 void	print_for_me(char *string)
 {
-	printf("%s", &string);
+	printf("%s", string);
 	fflush(stdout);
 }
 
@@ -26,7 +26,7 @@ int	main(void)
 	char	*result_string;
 
 	printf("\n\n--- Iniciando ---\n\n");
-	fd = open("text_files/nossa poesia", O_RDONLY);
+	fd = open("text_files/poesia.txt", O_RDONLY);
 	if (!(fd))
 	{
 		printf("Não foi possível abrir o arquivo. Vamos encerrar o programa");
