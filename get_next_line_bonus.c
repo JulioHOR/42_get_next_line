@@ -6,7 +6,7 @@
 /*   By: juhenriq <dev@juliohenrique.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 21:24:16 by juhenriq          #+#    #+#             */
-/*   Updated: 2024/12/03 21:02:50 by juhenriq         ###   ########.fr       */
+/*   Updated: 2024/12/04 02:39:44 by juhenriq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,12 @@ void	free_all_fd_nodes(t_fd **fd_head)
 	}
 }
 
-
-
 unsigned long	debug_totalstrlen(t_fd *head_tfd)
 {
 	unsigned long	i;
 	t_buffer		*i_tbuffer;
 
+	write(1, "oi", 2);
 	i_tbuffer = head_tfd->head_tbuffer;
 	i = 0;
 	while (i_tbuffer)
@@ -62,32 +61,11 @@ unsigned long	debug_totalstrlen(t_fd *head_tfd)
 
 char	*concat_buffers(t_fd *fd_ptr)
 {
-	int				i;
 	int				new_line_index;
 	char			*result_string;
 	t_buffer		*i_node_tbuffer;
 	unsigned long	curr_pos;
 
-	curr_pos = 0;
-	new_line_index = -1;
-	i = -1;
-	while (fd_ptr->last_tbuffer->buffer[++i])
-		if (fd_ptr->last_tbuffer->buffer[i] == '\n')
-		{
-			new_line_index = i;
-			break ;
-		}
-	if ((new_line_index != -1) && (new_line_index != BUFFER_SIZE))
-		fd_ptr->entire_len -= new_line_index;
-	result_string = (char *) malloc((fd_ptr->entire_len + 1));
-	if (!(result_string))
-		return (NULL);
-	i_node_tbuffer = fd_ptr->head_tbuffer;
-	while (i_node_tbuffer)
-	{
-		i_node_tbuffer = fd_ptr->head_tbuffer;
-		ft_memcpy(result_string, fd_ptr->last_tbuffer->buffer);
-	}
 	return (result_string);
 }
 
@@ -97,7 +75,7 @@ int	create_new_tbuffer_node(t_fd *fd_ptr)
 	t_buffer	*i_tbuffer;
 
 	created_tbuffer = (t_buffer *) malloc(sizeof(t_buffer));
-	if (!(created_tbuffer->next_tbuffer))
+	if (!(created_tbuffer))
 		return (1);
 	created_tbuffer->buffer = (char *) malloc(BUFFER_SIZE + 1);
 	if (!(created_tbuffer->buffer))
@@ -116,47 +94,9 @@ int	create_new_tbuffer_node(t_fd *fd_ptr)
 char	*get_string(t_fd *fd_ptr)
 {
 	int			bytes_read;
-	t_buffer	*latest_used_tbuffer;
-	int			i;
 
 	bytes_read = 0;
-	while (1)
-	{
-		latest_used_tbuffer = fd_ptr->last_tbuffer;
-		bytes_read = read(fd_ptr->fd_nbr, fd_ptr->last_tbuffer->buffer, \
-			BUFFER_SIZE);
-		if (bytes_read <= 0)
-		{
-			if (fd_ptr->entire_len)
-				return (concat_buffers(fd_ptr));
-			return (NULL);
-		}
-		fd_ptr->last_tbuffer->buffer[bytes_read] = '\0';
-		fd_ptr->entire_len += bytes_read;
-		if (create_new_tbuffer_node(fd_ptr))
-		{
-			free_all_fd_nodes(&fd_ptr);
-			return (NULL);
-		}
-		fd_ptr->last_tbuffer->buffer[0] = '\0';
-		// for debugging purposes
-		unsigned long debug_variable_entire_len = debug_totalstrlen(fd_ptr);
-		if (fd_ptr->entire_len != debug_variable_entire_len)
-		{
-			printf(
-				"\n\nOpa! Temos incoerênica nos valores de debug!\nentire_len" \
-				"é: %lu\nFunção de debug reportou: %lu\n\n", \
-				fd_ptr->entire_len, debug_variable_entire_len);
-		}
-		// end of debugging code
-		i = -1;
-		while (latest_used_tbuffer->buffer[++i])
-			if (latest_used_tbuffer->buffer[++i] == '\n')
-			{
-				if (i == 0)
-				return (concat_buffers(fd_ptr));
-			}
-	}
+	return (NULL);
 }
 
 t_fd	*get_fd_ptr(int fd, t_fd **fd_head)
@@ -176,6 +116,7 @@ t_fd	*get_fd_ptr(int fd, t_fd **fd_head)
 	i_fd_node = (t_fd *) malloc(sizeof(t_fd));
 	if (!(i_fd_node))
 		return (NULL);
+	*fd_head = i_fd_node;
 	if (create_new_tbuffer_node(*fd_head))
 	{
 		free_all_fd_nodes(fd_head);
