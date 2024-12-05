@@ -6,145 +6,156 @@
 /*   By: juhenriq <dev@juliohenrique.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 21:24:16 by juhenriq          #+#    #+#             */
-/*   Updated: 2024/12/04 02:39:44 by juhenriq         ###   ########.fr       */
+/*   Updated: 2024/12/04 22:04:03 by juhenriq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
-// APAGUE ESSE INCLUDE
+// APAGUE ESSE INCLUDE!!!
 #include <stdio.h>
 
-void	free_all_fd_nodes(t_fd **fd_head)
+void	*free_all_fd_nodes(t_fd **tfd_head)
 {
-	t_fd		*i_node_tfd;
-	t_fd		*temp_ptr_tfd;
-	t_buffer	*i_node_tbuffer;
-	t_buffer	*temp_ptr_tbuffer;
+	t_fd	*i_tfd;
+	t_fd	*temp_tfd;
 
-	if (!(*fd_head))
-		return ;
-	i_node_tfd = *fd_head;
-	i_node_tbuffer = NULL;
-	while (!(i_node_tfd))
+	if (!(*tfd_head))
+		return (NULL);
+	i_tfd = *tfd_head;
+	while (i_tfd)
 	{
-		i_node_tbuffer = i_node_tfd->head_tbuffer;
-		while (i_node_tbuffer)
-		{
-			temp_ptr_tbuffer = i_node_tbuffer->next_tbuffer;
-			free(i_node_tbuffer->buffer);
-			i_node_tbuffer->buffer = NULL;
-			free(i_node_tbuffer);
-			i_node_tbuffer = temp_ptr_tbuffer;
-		}
-		temp_ptr_tfd = i_node_tfd;
-		i_node_tfd = i_node_tfd->next_tfd;
-		free(temp_ptr_tfd);
+		temp_tfd = i_tfd;
+		free(i_tfd->content);
+		i_tfd = i_tfd->next_tfd;
+		free(temp_tfd);
 	}
-}
-
-unsigned long	debug_totalstrlen(t_fd *head_tfd)
-{
-	unsigned long	i;
-	t_buffer		*i_tbuffer;
-
-	write(1, "oi", 2);
-	i_tbuffer = head_tfd->head_tbuffer;
-	i = 0;
-	while (i_tbuffer)
-	{
-		while (i_tbuffer->buffer[i])
-			i++;
-		i_tbuffer = i_tbuffer->next_tbuffer;
-	}
-	return (i);
-}
-
-char	*concat_buffers(t_fd *fd_ptr)
-{
-	int				new_line_index;
-	char			*result_string;
-	t_buffer		*i_node_tbuffer;
-	unsigned long	curr_pos;
-
-	return (result_string);
-}
-
-int	create_new_tbuffer_node(t_fd *fd_ptr)
-{
-	t_buffer	*created_tbuffer;
-	t_buffer	*i_tbuffer;
-
-	created_tbuffer = (t_buffer *) malloc(sizeof(t_buffer));
-	if (!(created_tbuffer))
-		return (1);
-	created_tbuffer->buffer = (char *) malloc(BUFFER_SIZE + 1);
-	if (!(created_tbuffer->buffer))
-		return (1);
-	created_tbuffer->buffer[0] = '\0';
-	created_tbuffer->buffer[BUFFER_SIZE] = '\0';
-	created_tbuffer->next_tbuffer = NULL;
-	if (!(fd_ptr->head_tbuffer))
-		fd_ptr->head_tbuffer = created_tbuffer;
-	if(fd_ptr->last_tbuffer)
-		fd_ptr->last_tbuffer->next_tbuffer = created_tbuffer;
-	fd_ptr->last_tbuffer = created_tbuffer;
-	return (0);
-}
-
-char	*get_string(t_fd *fd_ptr)
-{
-	int			bytes_read;
-
-	bytes_read = 0;
+	*tfd_head = NULL;
+	tfd_head = NULL;
 	return (NULL);
 }
 
-t_fd	*get_fd_ptr(int fd, t_fd **fd_head)
+int	alloc_more(t_fd *curr_tfd)
 {
-	t_fd	*i_fd_node;
-	t_fd	*last_valid_node;
+	char			*new_string;
+	unsigned long	new_size;
 
-	last_valid_node = NULL;
-	i_fd_node = *fd_head;
-	while (i_fd_node)
+	new_size = ((curr_tfd->cont_max_sz_bytes - 1) * 2) + 1;
+	if (new_size <= BUFFER_SIZE)
+		new_size = (BUFFER_SIZE + 1);
+	new_string = (char *) malloc((new_size));
+	if (!(new_string))
+		return (-1);
+	curr_tfd->cont_max_sz_bytes = new_size;
+	ft_memcpy(new_string, curr_tfd->content);
+	free(curr_tfd->content);
+	curr_tfd->content = new_string;
+	return (0);
+}
+
+int	get_nl_idx(char *string, unsigned long filld_size, int bytes_read)
+{
+	unsigned long	index;
+	unsigned long	i;
+
+	index = -1;
+	i = (filld_size - bytes_read);
+	while (string[i])
 	{
-		if (i_fd_node->fd_nbr == fd)
-			return (i_fd_node);
-		last_valid_node = i_fd_node;
-		i_fd_node = i_fd_node->next_tfd;
+		if (string[i] == '\n')
+		{
+			index = i;
+			break ;
+		}
+		i++;
 	}
-	i_fd_node = (t_fd *) malloc(sizeof(t_fd));
-	if (!(i_fd_node))
-		return (NULL);
-	*fd_head = i_fd_node;
-	if (create_new_tbuffer_node(*fd_head))
+	return (index);
+}
+
+char	*get_string(t_fd *tfd)
+{
+	int				bytes_read;
+	char			*result_string;
+	unsigned long	nl_idx;
+
+	while (1)
 	{
-		free_all_fd_nodes(fd_head);
+		result_string = NULL;
+		if ((tfd->filld_size + BUFFER_SIZE) > (tfd->cont_max_sz_bytes - 1))
+			if (alloc_more(tfd))
+				return (free_all_fd_nodes);
+		bytes_read = 0;
+		bytes_read = read(tfd->fd_nbr, \
+			(tfd->content)[tfd->filld_size + 1], BUFFER_SIZE);
+		if (bytes_read <= 0)
+		{
+			if (tfd->filld_size)
+			{
+				result_string = ft_strdup(tfd->content);
+				tfd->filld_size = 0;
+				(tfd->content)[0] = '\0';
+			}
+			return (result_string);
+		}
+		tfd->filld_size += bytes_read;
+		(tfd->content)[tfd->filld_size] = '\0';
+		nl_idx = get_nl_idx(tfd->content, tfd->filld_size, bytes_read);
+		if (nl_idx != -1)
+		{
+			result_string = (char *) malloc(nl_idx + 2);
+			if (!(result_string))
+				return (NULL);
+			ft_memcpy(result_string, tfd->content, nl_idx);
+			ft_memmove(tfd->content, (tfd->content)[nl_idx + 1]);
+
+		}
+	}
+
+}
+
+t_fd	*get_fd_ptr(int fd, t_fd **tfd_head)
+{
+	t_fd	*i_tfd;
+	t_fd	*last_valid_tfd;
+
+	last_valid_tfd = NULL;
+	i_tfd = *tfd_head;
+	while (i_tfd)
+	{
+		if (i_tfd->fd_nbr == fd)
+			return (i_tfd);
+		last_valid_tfd = i_tfd;
+		i_tfd = i_tfd->next_tfd;
+	}
+	i_tfd = (t_fd *) malloc(sizeof(t_fd));
+	if (!(i_tfd))
+		return (NULL);
+	i_tfd->cont_max_sz_bytes = INITIAL_CONTENT_SIZE;
+	i_tfd->content = (char *) malloc(i_tfd->cont_max_sz_bytes);
+	if (!(i_tfd->content))
+	{
+		free(i_tfd);
 		return (NULL);
 	}
-	if (!(*fd_head))
-		*fd_head = i_fd_node;
-	if (last_valid_node)
-		last_valid_node->next_tfd = i_fd_node;
-	return (i_fd_node);
+	i_tfd->content[0] = '\0';
+	i_tfd->filld_size = 0;
+	i_tfd->fd_nbr = fd;
+	if (last_valid_tfd)
+		last_valid_tfd->next_tfd = i_tfd;
+	return (i_tfd);
 }
 
 char	*get_next_line(int fd)
 {
 	char		*result_string;
-	static t_fd	*fd_head;
+	static t_fd	*curr_tfd;
 
 	if (fd < 0)
 		return (NULL);
-	fd_head = get_fd_ptr(fd, &fd_head);
-	if (!(fd_head))
+	curr_tfd = get_fd_ptr(fd, &curr_tfd);
+	if (!(curr_tfd))
 		return (NULL);
-	result_string = NULL;
-	result_string = get_string(fd_head);
+	result_string = get_string(curr_tfd);
 	if (!(result_string))
-	{
-		free_all_fd_nodes(&fd_head);
-		return (NULL);
-	}
+		return (free_all_fd_nodes(&curr_tfd));
 	return (result_string);
 }

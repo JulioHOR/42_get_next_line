@@ -6,7 +6,7 @@
 /*   By: juhenriq <dev@juliohenrique.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 21:24:41 by juhenriq          #+#    #+#             */
-/*   Updated: 2024/12/04 02:37:49 by juhenriq         ###   ########.fr       */
+/*   Updated: 2024/12/04 21:26:40 by juhenriq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,25 +17,23 @@
 #  define BUFFER_SIZE 8
 # endif
 
+# ifndef INITIAL_CONTENT_SIZE
+#  define	INITIAL_CONTENT_SIZE (BUFFER_SIZE + 1);
+# endif
+
 #include <stdlib.h>
 #include <unistd.h>
-
-typedef struct s_buffer
-{
-	char			*buffer;
-	struct s_buffer	*next_tbuffer;
-}	t_buffer;
 
 typedef struct s_fd
 {
 	int				fd_nbr;
-	unsigned long	entire_len;
-	t_buffer		*head_tbuffer;
-	t_buffer		*last_tbuffer;
-	struct s_fd		*next_tfd;
+	char			*content;
+	unsigned long	cont_max_sz_bytes;
+	unsigned long	filld_size;
+	struct s_fd		next_tfd;
 }	t_fd;
 
 char	*get_next_line(int fd);
-void	ft_memcpy(void *dest, const void *src, unsigned long *i);
+void	ft_memcpy(void *dest, const void *src, unsigned long max_i);
 
 #endif
