@@ -6,7 +6,7 @@
 /*   By: juhenriq <dev@juliohenrique.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 21:25:38 by juhenriq          #+#    #+#             */
-/*   Updated: 2024/12/04 22:03:50 by juhenriq         ###   ########.fr       */
+/*   Updated: 2024/12/05 03:41:29 by juhenriq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,10 @@ void	ft_memmove(unsigned char *dest, unsigned char *src)
 	size_t	i;
 
 	i = 0;
-	if (src == 0 && dest == 0)
-		return ;
 	if (dest > src)
 	{
-		while (src[i])
-			i++;
-		while (src[i] >= src)
+		while (src[i++]);
+		while (&(src[i]) >= src)
 		{
 			dest[i] = src[i];
 			i--;
@@ -37,6 +34,7 @@ void	ft_memmove(unsigned char *dest, unsigned char *src)
 			dest[i] = src[i];
 			i++;
 		}
+		dest[i] = src[i];
 	}
 }
 
@@ -63,7 +61,7 @@ void	ft_memcpy(void *dest, const void *src, unsigned long max_i)
 			((unsigned char *) dest)[i] = ((unsigned char *) src)[i];
 			i++;
 		}
-		((unsigned char *) dest)[++i] = '\0';
+		((unsigned char *) dest)[i] = '\0';
 	}
 }
 
@@ -73,7 +71,9 @@ char	*ft_strdup(const char *s)
 	int		string_len;
 	char	*malloc_return;
 
-	string_len = ft_strlen(s);
+	i = -1;
+	while (s[++i]);
+	string_len = i;
 	malloc_return = (char *) malloc(string_len + 1);
 	if (!malloc_return)
 		return (NULL);

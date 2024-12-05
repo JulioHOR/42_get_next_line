@@ -6,7 +6,7 @@
 /*   By: juhenriq <dev@juliohenrique.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 21:24:16 by juhenriq          #+#    #+#             */
-/*   Updated: 2024/12/04 22:04:03 by juhenriq         ###   ########.fr       */
+/*   Updated: 2024/12/05 04:02:35 by juhenriq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	alloc_more(t_fd *curr_tfd)
 	if (!(new_string))
 		return (-1);
 	curr_tfd->cont_max_sz_bytes = new_size;
-	ft_memcpy(new_string, curr_tfd->content);
+	ft_memcpy(new_string, curr_tfd->content, 0);
 	free(curr_tfd->content);
 	curr_tfd->content = new_string;
 	return (0);
@@ -54,8 +54,8 @@ int	alloc_more(t_fd *curr_tfd)
 
 int	get_nl_idx(char *string, unsigned long filld_size, int bytes_read)
 {
-	unsigned long	index;
-	unsigned long	i;
+	long long	index;
+	long long	i;
 
 	index = -1;
 	i = (filld_size - bytes_read);
@@ -75,17 +75,19 @@ char	*get_string(t_fd *tfd)
 {
 	int				bytes_read;
 	char			*result_string;
-	unsigned long	nl_idx;
+	long long		nl_idx;
 
 	while (1)
 	{
 		result_string = NULL;
 		if ((tfd->filld_size + BUFFER_SIZE) > (tfd->cont_max_sz_bytes - 1))
 			if (alloc_more(tfd))
-				return (free_all_fd_nodes);
+				return (NULL);
 		bytes_read = 0;
 		bytes_read = read(tfd->fd_nbr, \
-			(tfd->content)[tfd->filld_size + 1], BUFFER_SIZE);
+			&((tfd->content)[tfd->filld_size]), BUFFER_SIZE);
+		if (bytes_read < 0)
+			return (NULL);
 		if (bytes_read <= 0)
 		{
 			if (tfd->filld_size)
@@ -105,8 +107,9 @@ char	*get_string(t_fd *tfd)
 			if (!(result_string))
 				return (NULL);
 			ft_memcpy(result_string, tfd->content, nl_idx);
-			ft_memmove(tfd->content, (tfd->content)[nl_idx + 1]);
-
+			ft_memmove((unsigned char *) tfd->content, (unsigned char *) &((tfd->content)[nl_idx + 1]));
+			tfd->filld_size = (tfd->filld_size - nl_idx) - 1;
+			return (result_string);
 		}
 	}
 
@@ -139,8 +142,11 @@ t_fd	*get_fd_ptr(int fd, t_fd **tfd_head)
 	i_tfd->content[0] = '\0';
 	i_tfd->filld_size = 0;
 	i_tfd->fd_nbr = fd;
+	i_tfd->next_tfd = NULL;
 	if (last_valid_tfd)
 		last_valid_tfd->next_tfd = i_tfd;
+	if (!(*tfd_head))
+		*tfd_head = i_tfd;
 	return (i_tfd);
 }
 
