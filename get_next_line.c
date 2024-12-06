@@ -6,7 +6,7 @@
 /*   By: juhenriq <dev@juliohenrique.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 21:24:16 by juhenriq          #+#    #+#             */
-/*   Updated: 2024/12/05 20:18:46 by juhenriq         ###   ########.fr       */
+/*   Updated: 2024/12/05 23:49:08 by juhenriq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,13 +58,13 @@ int	alloc_more(t_fd *curr_tfd)
 	return (0);
 }
 
-int	get_nl_idx(char *string, unsigned long filld_size, int bytes_read)
+int	get_nl_idx(char *string)
 {
 	long long	index;
 	long long	i;
 
 	index = -1;
-	i = (filld_size - bytes_read);
+	i = 0;
 	while (string[i])
 	{
 		if (string[i] == '\n')
@@ -77,46 +77,46 @@ int	get_nl_idx(char *string, unsigned long filld_size, int bytes_read)
 	return (index);
 }
 
+char	*extract_string(t_fd *tfd, long long nl_idx)
+{
+	char			*result_string;
+
+	result_string = (char *) malloc(nl_idx + 2);
+	if (!(result_string))
+		return (NULL);
+	ft_memcpy(result_string, tfd->content, nl_idx);
+	ft_memmove((unsigned char *) tfd->content, (unsigned char *) &((tfd->content)[nl_idx + 1]));
+	tfd->filld_size = (tfd->filld_size - nl_idx) - 1;
+	return (result_string);
+}
+
 char	*get_string(t_fd *tfd)
 {
 	int				bytes_read;
-	char			*result_string;
 	long long		nl_idx;
 
 	while (1)
 	{
-		result_string = NULL;
 		if ((tfd->filld_size + BUFFER_SIZE) > (tfd->cont_max_sz_bytes - 1))
 			if (alloc_more(tfd))
 				return (NULL);
 		bytes_read = 0;
 		bytes_read = read(tfd->fd_nbr, \
 			&((tfd->content)[tfd->filld_size]), BUFFER_SIZE);
-		if (bytes_read < 0)
+		if (bytes_read == -1)
 			return (NULL);
-		if (bytes_read <= 0)
-		{
-			if (tfd->filld_size)
-			{
-				result_string = ft_strdup(tfd->content);
-				tfd->filld_size = 0;
-				(tfd->content)[0] = '\0';
-			}
-			return (result_string);
-		}
 		tfd->filld_size += bytes_read;
 		(tfd->content)[tfd->filld_size] = '\0';
-		nl_idx = get_nl_idx(tfd->content, tfd->filld_size, bytes_read);
-		if (nl_idx != -1)
+		nl_idx = get_nl_idx(tfd->content);
+		if (bytes_read == 0 && nl_idx == -1 && tfd->filld_size > 0)
 		{
-			result_string = (char *) malloc(nl_idx + 2);
-			if (!(result_string))
-				return (NULL);
-			ft_memcpy(result_string, tfd->content, nl_idx);
-			ft_memmove((unsigned char *) tfd->content, (unsigned char *) &((tfd->content)[nl_idx + 1]));
-			tfd->filld_size = (tfd->filld_size - nl_idx) - 1;
-			return (result_string);
+			tfd->filld_size = 0;
+			return (ft_strdup(tfd->content));
 		}
+		if ((tfd->filld_size > 0) && (nl_idx != -1))
+			return (extract_string(tfd, nl_idx));
+		if (tfd->filld_size == 0 && nl_idx == -1)
+			return (NULL);
 	}
 }
 

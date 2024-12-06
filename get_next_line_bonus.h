@@ -6,7 +6,7 @@
 /*   By: juhenriq <dev@juliohenrique.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 21:24:41 by juhenriq          #+#    #+#             */
-/*   Updated: 2024/12/05 20:32:12 by juhenriq         ###   ########.fr       */
+/*   Updated: 2024/12/06 00:14:48 by juhenriq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define GET_NEXT_LINE_BONUS_H
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 10
+#  define BUFFER_SIZE 1000000
 # endif
 
 # ifndef INITIAL_CONTENT_SIZE

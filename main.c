@@ -6,7 +6,7 @@
 /*   By: juhenriq <dev@juliohenrique.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 21:10:00 by juhenriq          #+#    #+#             */
-/*   Updated: 2024/12/05 20:32:25 by juhenriq         ###   ########.fr       */
+/*   Updated: 2024/12/06 00:19:04 by juhenriq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int	main(void)
 	char	*result_string;
 
 	printf("\n\n--- Iniciando ---\n\n");
-	if (1)
+	if (0)
 	{
 		fd = open("text_files/multiple_nl.txt", O_RDONLY);
 		if (!(fd))
@@ -69,7 +69,7 @@ int	main(void)
 			free(result_string);
 		}
 	}
-	if (0)
+	if (1)
 	{
 		fd = open("text_files/poesia.txt", O_RDONLY);
 		if (!(fd))
@@ -77,11 +77,16 @@ int	main(void)
 			printf("Não foi possível abrir o arquivo. Vamos encerrar o programa");
 			return (0);
 		}
+		int	control = 0;
 		while (1)
 		{
 			result_string = get_next_line(fd);
-			// close(fd);
-			if (!(result_string))
+			if (!(control))
+				close(fd);
+			control++;
+			if (control == 2)
+				fd = open("text_files/poesia.txt", O_RDONLY);
+			if (!(result_string) && control >= 4)
 			{
 				printf("< Teste 1: Chegamos ao fim do arquivo ou tivemos um erro. >");
 				fflush(stdout);

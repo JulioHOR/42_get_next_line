@@ -6,7 +6,7 @@
 /*   By: juhenriq <dev@juliohenrique.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 21:24:16 by juhenriq          #+#    #+#             */
-/*   Updated: 2024/12/05 21:16:59 by juhenriq         ###   ########.fr       */
+/*   Updated: 2024/12/05 23:46:28 by juhenriq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ int	get_nl_idx(char *string)
 	return (index);
 }
 
-char	*extract_string(t_fd *tfd, int bytes_read, long long nl_idx)
+char	*extract_string(t_fd *tfd, long long nl_idx)
 {
 	char			*result_string;
 
@@ -114,7 +114,7 @@ char	*get_string(t_fd *tfd)
 			return (ft_strdup(tfd->content));
 		}
 		if ((tfd->filld_size > 0) && (nl_idx != -1))
-			return (extract_string(tfd, bytes_read, nl_idx));
+			return (extract_string(tfd, nl_idx));
 		if (tfd->filld_size == 0 && nl_idx == -1)
 			return (NULL);
 	}
