@@ -6,7 +6,7 @@
 /*   By: juhenriq <dev@juliohenrique.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 21:10:00 by juhenriq          #+#    #+#             */
-/*   Updated: 2024/12/05 04:03:52 by juhenriq         ###   ########.fr       */
+/*   Updated: 2024/12/05 20:32:25 by juhenriq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ int	main(void)
 		while (1)
 		{
 			result_string = get_next_line(fd);
-			close(fd);
+			// close(fd);
 			if (!(result_string))
 			{
 				printf("< Teste 1: Chegamos ao fim do arquivo ou tivemos um erro. >");

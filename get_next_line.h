@@ -6,7 +6,7 @@
 /*   By: juhenriq <dev@juliohenrique.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 21:24:41 by juhenriq          #+#    #+#             */
-/*   Updated: 2024/12/05 02:50:42 by juhenriq         ###   ########.fr       */
+/*   Updated: 2024/12/05 20:18:58 by juhenriq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,14 @@
 # define GET_NEXT_LINE_BONUS_H
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 8
+#  define BUFFER_SIZE 10
 # endif
 
 # ifndef INITIAL_CONTENT_SIZE
 #  define	INITIAL_CONTENT_SIZE (BUFFER_SIZE + 1);
 # endif
+
+// #  define	malloc(size) mock_malloc(size);
 
 #include <stdlib.h>
 #include <unistd.h>
