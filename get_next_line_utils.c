@@ -6,7 +6,7 @@
 /*   By: juhenriq <dev@juliohenrique.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 21:25:38 by juhenriq          #+#    #+#             */
-/*   Updated: 2024/12/06 19:09:57 by juhenriq         ###   ########.fr       */
+/*   Updated: 2024/12/07 18:37:52 by juhenriq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,27 +45,15 @@ void	ft_memcpy(void *dest, const void *src, unsigned long max_i)
 	if ((!(src)) && (!(dest)))
 		return ;
 	i = 0;
-	// if (max_i == 0)
-	// {
-	// 	while (((const char *)src)[i])
-	// 	{
-	// 		((unsigned char *) dest)[i] = ((unsigned char *) src)[i];
-	// 		i++;
-	// 	}
-	// 	((unsigned char *) dest)[i] = ((unsigned char *) src)[i];
-	// }
-	// else
-	// {
 	while (i <= max_i)
 	{
 		((unsigned char *) dest)[i] = ((unsigned char *) src)[i];
 		i++;
 	}
 	((unsigned char *) dest)[i] = '\0';
-	// }
 }
 
-char	*ft_strdup(const char *s)
+char	*ft_strdup(char *s)
 {
 	int		i;
 	int		string_len;

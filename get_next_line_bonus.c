@@ -6,7 +6,7 @@
 /*   By: juhenriq <dev@juliohenrique.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 21:24:16 by juhenriq          #+#    #+#             */
-/*   Updated: 2024/12/06 21:30:12 by juhenriq         ###   ########.fr       */
+/*   Updated: 2024/12/07 18:34:23 by juhenriq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,16 +25,14 @@ void	*free_this_node(t_fd **tfd_head, t_fd *target_tfd_for_removal)
 	last_valid_tfdnode = NULL;
 	while ((i_tfd) && (target_tfd_for_removal != *tfd_head))
 	{
-		last_valid_tfdnode = i_tfd;
 		if (i_tfd == target_tfd_for_removal)
 			break ;
+		last_valid_tfdnode = i_tfd;
 		if (i_tfd->next_tfd)
 			i_tfd = i_tfd->next_tfd;
 	}
 	if (last_valid_tfdnode)
 		last_valid_tfdnode->next_tfd = i_tfd->next_tfd;
-	// else
-	// 	*tfd_head = NULL;
 	if (i_tfd == *tfd_head)
 		*tfd_head = i_tfd->next_tfd;
 	free(i_tfd->content);
@@ -87,7 +85,8 @@ char	*extract_string(t_fd *tfd, long long nl_idx)
 	if (!(result_string))
 		return (NULL);
 	ft_memcpy(result_string, tfd->content, nl_idx);
-	ft_memmove((unsigned char *) tfd->content, (unsigned char *) &((tfd->content)[nl_idx + 1]));
+	ft_memmove((unsigned char *) tfd->content, \
+		(unsigned char *) &((tfd->content)[nl_idx + 1]));
 	tfd->filld_size = (tfd->filld_size - nl_idx) - 1;
 	return (result_string);
 }
@@ -103,14 +102,13 @@ char	*get_string(t_fd *tfd)
 			if (alloc_more(tfd))
 				return (NULL);
 		bytes_read = 0;
-		bytes_read = read(tfd->fd_nbr, \
-			&((tfd->content)[tfd->filld_size]), BUFFER_SIZE);
+		bytes_read = read(tfd->fd_nbr, &((tfd->content)[tfd->filld_size]), BUFFER_SIZE);
 		if (bytes_read == -1)
 			return (NULL);
 		tfd->filld_size += bytes_read;
 		(tfd->content)[tfd->filld_size] = '\0';
 		nl_idx = get_nl_idx(tfd->content);
-		if (bytes_read == 0 && nl_idx == -1 && tfd->filld_size > 0)
+		if ((bytes_read == 0) && (nl_idx == -1) && (tfd->filld_size > 0))
 		{
 			tfd->filld_size = 0;
 			return (ft_strdup(tfd->content));

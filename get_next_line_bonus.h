@@ -6,7 +6,7 @@
 /*   By: juhenriq <dev@juliohenrique.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 21:24:41 by juhenriq          #+#    #+#             */
-/*   Updated: 2024/12/06 19:07:40 by juhenriq         ###   ########.fr       */
+/*   Updated: 2024/12/07 18:35:22 by juhenriq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,11 @@
 # define GET_NEXT_LINE_BONUS_H
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 1000000
+#  define BUFFER_SIZE 1
 # endif
 
-// #  define	malloc(size) mock_malloc(size);
-
-#include <stdlib.h>
-#include <unistd.h>
+# include <stdlib.h>
+# include <unistd.h>
 
 typedef struct s_fd
 {
@@ -34,6 +32,6 @@ typedef struct s_fd
 char	*get_next_line(int fd);
 void	ft_memcpy(void *dest, const void *src, unsigned long max_i);
 void	ft_memmove(unsigned char *dest, unsigned char *src);
-char	*ft_strdup(const char *s);
+char	*ft_strdup(char *s);
 
 #endif

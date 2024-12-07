@@ -6,13 +6,14 @@
 /*   By: juhenriq <dev@juliohenrique.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 21:10:00 by juhenriq          #+#    #+#             */
-/*   Updated: 2024/12/06 20:07:16 by juhenriq         ###   ########.fr       */
+/*   Updated: 2024/12/07 18:11:12 by juhenriq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
 #include <fcntl.h>
 #include <stdio.h>
+#include <string.h>
 
 void	*mock_malloc(size_t size)
 {
@@ -20,7 +21,6 @@ void	*mock_malloc(size_t size)
 	int			force_failure_attempt;
 	void		*return_ptr;
 
-	// write (1, "entramos", 8);
 	malloc_attempt++;
 	force_failure_attempt = 4;
 	if (malloc_attempt == force_failure_attempt)
@@ -38,15 +38,54 @@ void	*mock_malloc(size_t size)
 void	print_for_me(char *string)
 {
 	if (!(string))
+	{
+		printf("NULL!\n");
 		return ;
+	}
 	printf("%s", string);
 	fflush(stdout);
 }
 
+void	our_gnl_tester(int test_nb, int fd, char *expected_result)
+{
+	char	*result;
+	int		string_cmp_result;
+
+	printf("\n\nTest number: %d\n", test_nb);
+	result = get_next_line(fd);
+	if (result)
+		printf("Output: %s", result);
+	else
+		printf("Output: %s\n", result);
+	fflush(stdout);
+	if (result && expected_result)
+	{
+		string_cmp_result = strcmp(result, expected_result);
+		if (string_cmp_result)
+			printf("Tivemos diferença do esperado para o que obtivemos.\n" \
+				"O que obtivemos: %s\nO esperado: %s", result, expected_result);
+		else
+			printf("\033[32mOK!!!\033[0m");
+	}
+	else
+		if (!(result) && !(expected_result))
+			printf("\033[32mOK!!!\033[0m Ambos resultados foram nulos");
+		else
+		{
+			if (!(result))
+				printf("KO. Nosso resultado foi nulo, mas o esperado era: %s", expected_result);
+			if (!(expected_result))
+				printf("KO. Nosso resultado foi '%s', mas o esperado era nulo.", result);
+		}
+	free(result);
+}
+
 int	main(void)
 {
+	int		fd_0;
 	int		fd_1;
 	int		fd_2;
+	int		fd_3;
 	int		execution_counter;
 	char	*result_string;
 
@@ -98,7 +137,7 @@ int	main(void)
 			free(result_string);
 		}
 	}
-	if (1)
+	if (0)
 	{
 		int	curr_fd;
 		fd_1 = open("text_files/read_error.txt", O_RDONLY);
@@ -146,6 +185,40 @@ int	main(void)
 			free(result_string);
 			execution_counter++;
 		}
+	}
+	if (1)
+	{
+		fd_0 = open("text_files/41_with_nl", O_RDONLY);
+		fd_1 = open("text_files/42_with_nl", O_RDONLY);
+		fd_2 = open("text_files/43_with_nl", O_RDONLY);
+		fd_3 = open("text_files/nl", O_RDONLY);
+
+		/* 1 */ our_gnl_tester(1, 1000, NULL);
+		/* 2 */ our_gnl_tester(2, fd_0, "0123456789012345678901234567890123456789\n");
+
+		/* 3 */ our_gnl_tester(3, 1001, NULL);
+		/* 4 */ our_gnl_tester(4, fd_1, "01234567890123456789012345678901234567890\n");
+
+		/* 5 */ our_gnl_tester(5, 1002, NULL);
+		/* 6 */ our_gnl_tester(6, fd_2, "012345678901234567890123456789012345678901\n");
+
+		/* 7 */ our_gnl_tester(7, 1003, NULL);
+		/* 8 */ our_gnl_tester(8, fd_0, "0");
+
+		/* 9 */ our_gnl_tester(9, 1004, NULL);
+		/* 10 */ our_gnl_tester(10, fd_1, "1");
+
+		/* 11 */ our_gnl_tester(11, 1005, NULL);
+		/* 12 */ our_gnl_tester(12, fd_2, "2");
+
+		/* 13 */ our_gnl_tester(13, fd_0, NULL);
+		/* 14 */ our_gnl_tester(14, fd_1, NULL);
+		/* 15 */ our_gnl_tester(15, fd_2, NULL);
+
+		/* 16 */ our_gnl_tester(16, 1006, NULL);
+		/* 17 */ our_gnl_tester(17, fd_3, "\n");
+		/* 18 */ our_gnl_tester(18, 1007, NULL);
+		/* 19 */ our_gnl_tester(19, fd_3, NULL);
 	}
 	printf("\n\n--- Encerrando ---\n\n");
 	return (0);
