@@ -6,7 +6,7 @@
 /*   By: juhenriq <dev@juliohenrique.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 21:24:16 by juhenriq          #+#    #+#             */
-/*   Updated: 2024/12/05 23:49:08 by juhenriq         ###   ########.fr       */
+/*   Updated: 2024/12/06 19:09:50 by juhenriq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ int	get_nl_idx(char *string)
 
 char	*extract_string(t_fd *tfd, long long nl_idx)
 {
-	char			*result_string;
+	char	*result_string;
 
 	result_string = (char *) malloc(nl_idx + 2);
 	if (!(result_string))
@@ -137,7 +137,7 @@ t_fd	*get_fd_ptr(int fd, t_fd **tfd_head)
 	i_tfd = (t_fd *) malloc(sizeof(t_fd));
 	if (!(i_tfd))
 		return (NULL);
-	i_tfd->cont_max_sz_bytes = INITIAL_CONTENT_SIZE;
+	i_tfd->cont_max_sz_bytes = (BUFFER_SIZE + 1);
 	i_tfd->content = (char *) malloc(i_tfd->cont_max_sz_bytes);
 	if (!(i_tfd->content))
 	{

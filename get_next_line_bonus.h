@@ -6,7 +6,7 @@
 /*   By: juhenriq <dev@juliohenrique.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 21:24:41 by juhenriq          #+#    #+#             */
-/*   Updated: 2024/12/06 00:14:48 by juhenriq         ###   ########.fr       */
+/*   Updated: 2024/12/06 19:07:40 by juhenriq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,6 @@
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 1000000
-# endif
-
-# ifndef INITIAL_CONTENT_SIZE
-#  define	INITIAL_CONTENT_SIZE (BUFFER_SIZE + 1);
 # endif
 
 // #  define	malloc(size) mock_malloc(size);

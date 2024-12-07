@@ -1,24 +1,9 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: juhenriq <dev@juliohenrique.com>           +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/13 21:24:41 by juhenriq          #+#    #+#             */
-/*   Updated: 2024/12/05 23:49:22 by juhenriq         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_BONUS_H
 # define GET_NEXT_LINE_BONUS_H
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 10
-# endif
-
-# ifndef INITIAL_CONTENT_SIZE
-#  define	INITIAL_CONTENT_SIZE (BUFFER_SIZE + 1);
+#  define BUFFER_SIZE 1000000
 # endif
 
 // #  define	malloc(size) mock_malloc(size);

@@ -6,7 +6,7 @@
 /*   By: juhenriq <dev@juliohenrique.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 21:24:16 by juhenriq          #+#    #+#             */
-/*   Updated: 2024/12/05 23:46:28 by juhenriq         ###   ########.fr       */
+/*   Updated: 2024/12/06 21:30:12 by juhenriq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	*free_this_node(t_fd **tfd_head, t_fd *target_tfd_for_removal)
 		return (NULL);
 	i_tfd = *tfd_head;
 	last_valid_tfdnode = NULL;
-	while ((i_tfd) && (i_tfd != *tfd_head))
+	while ((i_tfd) && (target_tfd_for_removal != *tfd_head))
 	{
 		last_valid_tfdnode = i_tfd;
 		if (i_tfd == target_tfd_for_removal)
@@ -33,8 +33,10 @@ void	*free_this_node(t_fd **tfd_head, t_fd *target_tfd_for_removal)
 	}
 	if (last_valid_tfdnode)
 		last_valid_tfdnode->next_tfd = i_tfd->next_tfd;
-	else
-		*tfd_head = NULL;
+	// else
+	// 	*tfd_head = NULL;
+	if (i_tfd == *tfd_head)
+		*tfd_head = i_tfd->next_tfd;
 	free(i_tfd->content);
 	free(i_tfd);
 	return (NULL);
@@ -79,7 +81,7 @@ int	get_nl_idx(char *string)
 
 char	*extract_string(t_fd *tfd, long long nl_idx)
 {
-	char			*result_string;
+	char	*result_string;
 
 	result_string = (char *) malloc(nl_idx + 2);
 	if (!(result_string))
@@ -137,7 +139,7 @@ t_fd	*get_fd_ptr(int fd, t_fd **tfd_head)
 	i_tfd = (t_fd *) malloc(sizeof(t_fd));
 	if (!(i_tfd))
 		return (NULL);
-	i_tfd->cont_max_sz_bytes = INITIAL_CONTENT_SIZE;
+	i_tfd->cont_max_sz_bytes = (BUFFER_SIZE + 1);
 	i_tfd->content = (char *) malloc(i_tfd->cont_max_sz_bytes);
 	if (!(i_tfd->content))
 	{
