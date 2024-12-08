@@ -6,13 +6,11 @@
 /*   By: juhenriq <dev@juliohenrique.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 21:24:16 by juhenriq          #+#    #+#             */
-/*   Updated: 2024/12/07 18:35:43 by juhenriq         ###   ########.fr       */
+/*   Updated: 2024/12/07 22:50:05 by juhenriq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line_bonus.h"
-// APAGUE ESSE INCLUDE!!!
-#include <stdio.h>
+#include "get_next_line.h"
 
 void	*free_this_node(t_fd **tfd_head, t_fd *target_tfd_for_removal)
 {
@@ -40,24 +38,6 @@ void	*free_this_node(t_fd **tfd_head, t_fd *target_tfd_for_removal)
 	return (NULL);
 }
 
-int	alloc_more(t_fd *curr_tfd)
-{
-	char			*new_string;
-	unsigned long	new_size;
-
-	new_size = ((curr_tfd->cont_max_sz_bytes - 1) * 2) + 1;
-	if (new_size <= BUFFER_SIZE)
-		new_size = (BUFFER_SIZE + 1);
-	new_string = (char *) malloc((new_size));
-	if (!(new_string))
-		return (-1);
-	curr_tfd->cont_max_sz_bytes = new_size;
-	ft_memcpy(new_string, curr_tfd->content, curr_tfd->filld_size);
-	free(curr_tfd->content);
-	curr_tfd->content = new_string;
-	return (0);
-}
-
 int	get_nl_idx(char *string)
 {
 	long long	index;
@@ -77,20 +57,6 @@ int	get_nl_idx(char *string)
 	return (index);
 }
 
-char	*extract_string(t_fd *tfd, long long nl_idx)
-{
-	char	*result_string;
-
-	result_string = (char *) malloc(nl_idx + 2);
-	if (!(result_string))
-		return (NULL);
-	ft_memcpy(result_string, tfd->content, nl_idx);
-	ft_memmove((unsigned char *) tfd->content, \
-		(unsigned char *) &((tfd->content)[nl_idx + 1]));
-	tfd->filld_size = (tfd->filld_size - nl_idx) - 1;
-	return (result_string);
-}
-
 char	*get_string(t_fd *tfd)
 {
 	int				bytes_read;
@@ -101,18 +67,15 @@ char	*get_string(t_fd *tfd)
 		if ((tfd->filld_size + BUFFER_SIZE) > (tfd->cont_max_sz_bytes - 1))
 			if (alloc_more(tfd))
 				return (NULL);
-		bytes_read = 0;
-		bytes_read = read(tfd->fd_nbr, &((tfd->content)[tfd->filld_size]), BUFFER_SIZE);
+		bytes_read = read(tfd->fd_nbr, \
+			&((tfd->content)[tfd->filld_size]), BUFFER_SIZE);
 		if (bytes_read == -1)
 			return (NULL);
 		tfd->filld_size += bytes_read;
 		(tfd->content)[tfd->filld_size] = '\0';
 		nl_idx = get_nl_idx(tfd->content);
 		if ((bytes_read == 0) && (nl_idx == -1) && (tfd->filld_size > 0))
-		{
-			tfd->filld_size = 0;
-			return (ft_strdup(tfd->content));
-		}
+			return (modified_ft_strdup(tfd));
 		if ((tfd->filld_size > 0) && (nl_idx != -1))
 			return (extract_string(tfd, nl_idx));
 		if (tfd->filld_size == 0 && nl_idx == -1)

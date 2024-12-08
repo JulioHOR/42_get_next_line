@@ -6,7 +6,7 @@
 /*   By: juhenriq <dev@juliohenrique.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 21:24:41 by juhenriq          #+#    #+#             */
-/*   Updated: 2024/12/07 18:35:30 by juhenriq         ###   ########.fr       */
+/*   Updated: 2024/12/07 22:48:22 by juhenriq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define GET_NEXT_LINE_BONUS_H
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 1
+#  define BUFFER_SIZE 4096
 # endif
 
 # include <stdlib.h>
@@ -32,6 +32,8 @@ typedef struct s_fd
 char	*get_next_line(int fd);
 void	ft_memcpy(void *dest, const void *src, unsigned long max_i);
 void	ft_memmove(unsigned char *dest, unsigned char *src);
-char	*ft_strdup(char *s);
+int		alloc_more(t_fd *curr_tfd);
+char	*modified_ft_strdup(t_fd *tfd);
+char	*extract_string(t_fd *tfd, long long nl_idx);
 
 #endif
