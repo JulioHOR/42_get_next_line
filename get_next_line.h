@@ -6,12 +6,12 @@
 /*   By: juhenriq <dev@juliohenrique.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 21:24:41 by juhenriq          #+#    #+#             */
-/*   Updated: 2024/12/07 23:17:54 by juhenriq         ###   ########.fr       */
+/*   Updated: 2024/12/08 18:41:50 by juhenriq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_BONUS_H
-# define GET_NEXT_LINE_BONUS_H
+#ifndef GET_NEXT_LINE_H
+# define GET_NEXT_LINE_H
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 4096
@@ -34,5 +34,6 @@ void	ft_memmove(unsigned char *dest, unsigned char *src);
 int		alloc_more(t_fd *curr_tfd);
 char	*modified_ft_strdup(t_fd *tfd);
 char	*extract_string(t_fd *tfd, long long nl_idx);
+void	*free_this_node(t_fd **tfd_head, t_fd *target_tfd_for_removal);
 
 #endif

@@ -6,37 +6,11 @@
 /*   By: juhenriq <dev@juliohenrique.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 21:24:16 by juhenriq          #+#    #+#             */
-/*   Updated: 2024/12/07 23:35:44 by juhenriq         ###   ########.fr       */
+/*   Updated: 2024/12/08 18:38:47 by juhenriq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
-
-void	*free_this_node(t_fd **tfd_head, t_fd *target_tfd_for_removal)
-{
-	t_fd	*i_tfd;
-	t_fd	*last_valid_tfdnode;
-
-	if (!(*tfd_head))
-		return (NULL);
-	i_tfd = *tfd_head;
-	last_valid_tfdnode = NULL;
-	while ((i_tfd) && (target_tfd_for_removal != *tfd_head))
-	{
-		if (i_tfd == target_tfd_for_removal)
-			break ;
-		last_valid_tfdnode = i_tfd;
-		if (i_tfd->next_tfd)
-			i_tfd = i_tfd->next_tfd;
-	}
-	if (last_valid_tfdnode)
-		last_valid_tfdnode->next_tfd = i_tfd->next_tfd;
-	if (i_tfd == *tfd_head)
-		*tfd_head = i_tfd->next_tfd;
-	free(i_tfd->content);
-	free(i_tfd);
-	return (NULL);
-}
 
 int	get_nl_idx(char *string)
 {
@@ -118,25 +92,9 @@ t_fd	*get_fd_ptr(int fd, t_fd **tfd_head)
 		last_valid_tfd = i_tfd;
 		i_tfd = i_tfd->next_tfd;
 	}
-	//	começo do inxerto
 	i_tfd = create_tfd(fd);
 	if (!(i_tfd))
 		return (NULL);
-	// fim do inxerto
-	// i_tfd = (t_fd *) malloc(sizeof(t_fd));
-	// if (!(i_tfd))
-	// 	return (NULL);
-	// i_tfd->cont_max_sz_bytes = (BUFFER_SIZE + 1);
-	// i_tfd->content = (char *) malloc(i_tfd->cont_max_sz_bytes);
-	// if (!(i_tfd->content))
-	// {
-	// 	free(i_tfd);
-	// 	return (NULL);
-	// }
-	// i_tfd->content[0] = '\0';
-	// i_tfd->filld_size = 0;
-	// i_tfd->fd_nbr = fd;
-	// i_tfd->next_tfd = NULL;
 	if (last_valid_tfd)
 		last_valid_tfd->next_tfd = i_tfd;
 	if (!(*tfd_head))

@@ -6,7 +6,7 @@
 /*   By: juhenriq <dev@juliohenrique.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 21:25:38 by juhenriq          #+#    #+#             */
-/*   Updated: 2024/12/07 23:22:53 by juhenriq         ###   ########.fr       */
+/*   Updated: 2024/12/08 18:38:56 by juhenriq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,4 +114,30 @@ char	*extract_string(t_fd *tfd, long long nl_idx)
 		(unsigned char *) &((tfd->content)[nl_idx + 1]));
 	tfd->filld_size = (tfd->filld_size - nl_idx) - 1;
 	return (result_string);
+}
+
+void	*free_this_node(t_fd **tfd_head, t_fd *target_tfd_for_removal)
+{
+	t_fd	*i_tfd;
+	t_fd	*last_valid_tfdnode;
+
+	if (!(*tfd_head))
+		return (NULL);
+	i_tfd = *tfd_head;
+	last_valid_tfdnode = NULL;
+	while ((i_tfd) && (target_tfd_for_removal != *tfd_head))
+	{
+		if (i_tfd == target_tfd_for_removal)
+			break ;
+		last_valid_tfdnode = i_tfd;
+		if (i_tfd->next_tfd)
+			i_tfd = i_tfd->next_tfd;
+	}
+	if (last_valid_tfdnode)
+		last_valid_tfdnode->next_tfd = i_tfd->next_tfd;
+	if (i_tfd == *tfd_head)
+		*tfd_head = i_tfd->next_tfd;
+	free(i_tfd->content);
+	free(i_tfd);
+	return (NULL);
 }
