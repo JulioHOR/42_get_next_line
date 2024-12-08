@@ -6,7 +6,7 @@
 /*   By: juhenriq <dev@juliohenrique.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 21:25:38 by juhenriq          #+#    #+#             */
-/*   Updated: 2024/12/07 22:52:29 by juhenriq         ###   ########.fr       */
+/*   Updated: 2024/12/07 23:06:57 by juhenriq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ int	alloc_more(t_fd *curr_tfd)
 {
 	char			*new_string;
 	unsigned long	new_size;
+	unsigned long	i;
 
 	new_size = ((curr_tfd->cont_max_sz_bytes - 1) * 2) + 1;
 	if (new_size <= BUFFER_SIZE)
@@ -92,6 +93,16 @@ int	alloc_more(t_fd *curr_tfd)
 		return (-1);
 	curr_tfd->cont_max_sz_bytes = new_size;
 	ft_memcpy(new_string, curr_tfd->content, curr_tfd->filld_size);
+	if ((!(new_string)) && (!(curr_tfd->content)))
+		return (-1);
+	i = 0;
+	while (i <= curr_tfd->filld_size)
+	{
+		((unsigned char *) new_string)[i] = \
+			((unsigned char *) curr_tfd->content)[i];
+		i++;
+	}
+	((unsigned char *) new_string)[i] = '\0';
 	free(curr_tfd->content);
 	curr_tfd->content = new_string;
 	return (0);
