@@ -6,7 +6,7 @@
 /*   By: juhenriq <dev@juliohenrique.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 21:25:38 by juhenriq          #+#    #+#             */
-/*   Updated: 2024/12/07 23:06:57 by juhenriq         ###   ########.fr       */
+/*   Updated: 2024/12/07 23:22:53 by juhenriq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,21 +37,6 @@ void	ft_memmove(unsigned char *dest, unsigned char *src)
 		}
 		dest[i] = src[i];
 	}
-}
-
-void	ft_memcpy(void *dest, const void *src, unsigned long max_i)
-{
-	size_t	i;
-
-	if ((!(src)) && (!(dest)))
-		return ;
-	i = 0;
-	while (i <= max_i)
-	{
-		((unsigned char *) dest)[i] = ((unsigned char *) src)[i];
-		i++;
-	}
-	((unsigned char *) dest)[i] = '\0';
 }
 
 char	*modified_ft_strdup(t_fd *tfd)
@@ -92,7 +77,6 @@ int	alloc_more(t_fd *curr_tfd)
 	if (!(new_string))
 		return (-1);
 	curr_tfd->cont_max_sz_bytes = new_size;
-	ft_memcpy(new_string, curr_tfd->content, curr_tfd->filld_size);
 	if ((!(new_string)) && (!(curr_tfd->content)))
 		return (-1);
 	i = 0;
@@ -110,12 +94,22 @@ int	alloc_more(t_fd *curr_tfd)
 
 char	*extract_string(t_fd *tfd, long long nl_idx)
 {
-	char	*result_string;
+	char		*result_string;
+	long long	i;
 
 	result_string = (char *) malloc(nl_idx + 2);
 	if (!(result_string))
 		return (NULL);
-	ft_memcpy(result_string, tfd->content, nl_idx);
+	if ((!(tfd->content)) && (!(result_string)))
+		return (NULL);
+	i = 0;
+	while (i <= nl_idx)
+	{
+		((unsigned char *) result_string)[i] = \
+			((unsigned char *) tfd->content)[i];
+		i++;
+	}
+	((unsigned char *) result_string)[i] = '\0';
 	ft_memmove((unsigned char *) tfd->content, \
 		(unsigned char *) &((tfd->content)[nl_idx + 1]));
 	tfd->filld_size = (tfd->filld_size - nl_idx) - 1;

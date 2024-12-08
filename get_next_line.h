@@ -6,7 +6,7 @@
 /*   By: juhenriq <dev@juliohenrique.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 21:24:41 by juhenriq          #+#    #+#             */
-/*   Updated: 2024/12/07 23:06:50 by juhenriq         ###   ########.fr       */
+/*   Updated: 2024/12/07 23:17:54 by juhenriq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ typedef struct s_fd
 
 char	*get_next_line(int fd);
 void	ft_memmove(unsigned char *dest, unsigned char *src);
-void	ft_memcpy(void *dest, const void *src, unsigned long max_i);
 int		alloc_more(t_fd *curr_tfd);
 char	*modified_ft_strdup(t_fd *tfd);
 char	*extract_string(t_fd *tfd, long long nl_idx);
