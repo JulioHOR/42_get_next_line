@@ -6,7 +6,7 @@
 /*   By: juhenriq <dev@juliohenrique.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 21:24:16 by juhenriq          #+#    #+#             */
-/*   Updated: 2024/12/07 22:49:55 by juhenriq         ###   ########.fr       */
+/*   Updated: 2024/12/07 23:35:44 by juhenriq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,20 +83,10 @@ char	*get_string(t_fd *tfd)
 	}
 }
 
-t_fd	*get_fd_ptr(int fd, t_fd **tfd_head)
+t_fd	*create_tfd(int fd)
 {
 	t_fd	*i_tfd;
-	t_fd	*last_valid_tfd;
 
-	last_valid_tfd = NULL;
-	i_tfd = *tfd_head;
-	while (i_tfd)
-	{
-		if (i_tfd->fd_nbr == fd)
-			return (i_tfd);
-		last_valid_tfd = i_tfd;
-		i_tfd = i_tfd->next_tfd;
-	}
 	i_tfd = (t_fd *) malloc(sizeof(t_fd));
 	if (!(i_tfd))
 		return (NULL);
@@ -111,6 +101,42 @@ t_fd	*get_fd_ptr(int fd, t_fd **tfd_head)
 	i_tfd->filld_size = 0;
 	i_tfd->fd_nbr = fd;
 	i_tfd->next_tfd = NULL;
+	return (i_tfd);
+}
+
+t_fd	*get_fd_ptr(int fd, t_fd **tfd_head)
+{
+	t_fd	*i_tfd;
+	t_fd	*last_valid_tfd;
+
+	last_valid_tfd = NULL;
+	i_tfd = *tfd_head;
+	while (i_tfd)
+	{
+		if (i_tfd->fd_nbr == fd)
+			return (i_tfd);
+		last_valid_tfd = i_tfd;
+		i_tfd = i_tfd->next_tfd;
+	}
+	//	começo do inxerto
+	i_tfd = create_tfd(fd);
+	if (!(i_tfd))
+		return (NULL);
+	// fim do inxerto
+	// i_tfd = (t_fd *) malloc(sizeof(t_fd));
+	// if (!(i_tfd))
+	// 	return (NULL);
+	// i_tfd->cont_max_sz_bytes = (BUFFER_SIZE + 1);
+	// i_tfd->content = (char *) malloc(i_tfd->cont_max_sz_bytes);
+	// if (!(i_tfd->content))
+	// {
+	// 	free(i_tfd);
+	// 	return (NULL);
+	// }
+	// i_tfd->content[0] = '\0';
+	// i_tfd->filld_size = 0;
+	// i_tfd->fd_nbr = fd;
+	// i_tfd->next_tfd = NULL;
 	if (last_valid_tfd)
 		last_valid_tfd->next_tfd = i_tfd;
 	if (!(*tfd_head))
